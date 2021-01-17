@@ -1,0 +1,5 @@
+[client]
+database = social
+user = ak_social
+password = social101
+default-character-set = utf8

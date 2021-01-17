@@ -1,0 +1,23 @@
+{% extends "post/base.html" %}
+{% block content %}
+    <div class='sontent-section'>
+        <form method='POST'>
+            {%csrf_token%}
+            <fieldset class='form-group'>
+                <legend class='border-bottom mb-4'>DeletePost</legend>
+                <h2>Are you sure?' {{object.title}}'</h2>
+            </fieldset>
+            <fieldset>
+                <div class='form-button'>
+                    <button class='btn btn-outline-danger' type='Confirm'>Post</button>
+                    <a class='btn btn-outline-secondary' type='Confirm' href='{% url 'post' object.id%}'>Cancel</a>
+
+                    
+                </div>
+                
+                
+            </fieldset>
+
+        </form>
+    </div>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends "post/base.html" %}
+{% block content %}
+    <h1>Profiles To Follow</h1>
+    <div>
+        {% for profile in profiles %}
+            <div>
+                {{profile}}
+                <br>
+                <a href='{%url 'profile-detail' profile.pk %}'>
+                    <button class='ui primary button '> See Profile</button>
+                </a>
+            </div>
+            
+        {%endfor%}
+    </div>
+{% endblock content %}

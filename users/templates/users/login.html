@@ -1,0 +1,59 @@
+{% extends "post/base.html" %}
+{%load crispy_forms_tags %}
+{% block content %}
+<script src="https://apis.google.com/js/platform.js">Google</script>
+<meta name="google-signin-client_id" content="521329610423-bk3s4p7rsgkscu2bvgpmdrqj496e3pdg.apps.googleusercontent.com">
+    <div class='content-section'>
+        <form method='POST'>
+            {%csrf_token%}
+            
+            <fieldset class='form-group'>
+                <legend class='border-bottom mb-4'>Login</legend>
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <script>
+
+                    gapi.load('auth2', function () {
+                        gapi.auth2.init();
+                    })
+                    function onSignIn(googleUser) {
+                        // Useful data for your client-side scripts:
+                        var profile = googleUser.getBasicProfile();
+                        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                        console.log('Full Name: ' + profile.getName());
+                        console.log('Given Name: ' + profile.getGivenName());
+                        console.log('Family Name: ' + profile.getFamilyName());
+                        console.log("Image URL: " + profile.getImageUrl());
+                        console.log("Email: " + profile.getEmail());
+
+                        // The ID token you need to pass to your backend:
+                        var id_token = googleUser.getAuthResponse().id_token;
+                        console.log("ID Token: " + id_token);
+                    }
+                </script>
+                
+                {{ form|crispy }}
+                
+            </fieldset>
+            <fieldset>
+                <div class='form-button'>
+                    <button class='btn btn-outline-info' type='submit'>
+                        Login
+                        
+                    </button>
+                    <small class='text-muted ml2'>
+                        <a href='{% url 'password_reset' %}'>Forgot your Password?</a>
+                    </small>
+                </div>
+                
+                
+            </fieldset>
+
+        </form>
+        <div class='border-top pt-3'>
+            <small class='text-muted'>Do you need an account?
+                <a href='{%url 'register' %} ' class='ml-3'>Sign up</a>
+            </small>
+
+        </div>
+    </div>
+{% endblock content %}

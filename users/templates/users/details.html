@@ -1,0 +1,102 @@
+{% extends "post/base.html" %}
+{% block content %}
+    <h1 class="display-4">{{profile_v.user}}</h1>
+    <div>
+        <img class='rounded-circle article-img' src="{{profile_v.image.url}}">
+        <h2 >About:</h2>
+        <p class="h4">{{profile_v.bio}}</p>
+            {%if profile_v.user != user%}
+                {%if  follow %}
+                    <form action='{% url 'follow_unfollow' %}' method='POST'>
+                        {%csrf_token%}
+                        <input type='hidden' name='profile_pk' value={{profile_v.user.pk}}>
+                        
+                        <button type='submit'  class="btn btn-danger">Unfollow</buttton>
+                    </form>
+                {%else%}
+                    <form action='{% url 'follow_unfollow' %}' method='POST'>
+                        {%csrf_token%}
+                        
+                        <input type='hidden' name='profile_pk' value={{profile_v.user.pk}}>
+                        <button id='follow-btn' type="submit" class="btn btn-primary">Follow</buttton>
+                    </form>
+                {%endif%}
+            {%else%}
+            {%endif%}
+
+    </div>
+    
+    <h2>Posts by {{profile_v.user}}</h2>
+
+    {% for post in posts %}
+        <article class="media content-section">
+            <img class='rounded-circle article-img' src="{{post.author.profile.image.url}}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ post.author }}</a>
+                    <small class="text-muted">{{ post.Date }}</small>
+                    {%if user not in post.like.all and user not in post.dislike.all %}
+                        <form action ='{%url 'like_post' post.pk %}' method='POST'>
+                            
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128077  </button> {{post.like.count}} Likes
+
+                        </form>
+                        <form action ='{%url 'dislike_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128078  </button> {{post.dislike.count}} Dislikes
+
+                        </form>
+                        
+                    {%endif%}
+                    {%if user in post.like.all and user not in post.dislike.all %}
+                        <form action ='{%url 'unlike_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128077  </button> {{post.like.count}} Likes
+
+                        </form>
+                        <form action ='{%url 'dislike_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128078  </button> {{post.dislike.count}} Dislikes
+                
+                        </form>
+                    {%endif%}
+                    {%if user not in post.like.all and user  in post.dislike.all %}
+                        <form action ='{%url 'like_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128077  </button> {{post.like.count}} Likes
+
+                        </form>
+                        <form action ='{%url 'undislike_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128078  </button> {{post.dislike.count}} Dislikes
+                
+                        </form>
+                    {%endif%}
+                    {%if user in post.like.all and user in post.dislike.all %}
+                        <form action ='{%url 'unlike_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128077  </button> {{post.like.count}} Likes
+
+                        </form>
+                        <form action ='{%url 'undislike_post' post.pk %}' method='POST'>
+                            {%csrf_token%}
+                            <button type='submit', name="post_id", value = {{post.pk}} , class="btn btn-primary" >&#128078  </button> {{post.dislike.count}} Dislikes
+                
+                        </form>
+                    {%endif%}
+        
+                </div>
+                <h2><a class="article-title" href='{% url 'post' post.id %}'>{{ post.title }}</a></h2>
+                <p class="article-content">{{ post.content }}</p>
+                {%if post.image_post%}
+                    <div>
+                        <img  src="{{post.image_post.url}}">
+                    </div>
+                {%endif%}
+            </div>
+        </article>
+    {% endfor %}
+    <br>
+    
+{% endblock content %}
